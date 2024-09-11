@@ -78,6 +78,7 @@ func trap(height []int) int {
 */
 
 // 单调栈
+/*
 func trap(height []int) int {
 	var (
 		stack      = make([]int, len(height))
@@ -118,6 +119,30 @@ func trap(height []int) int {
 					index++
 				}
 			}
+		}
+	}
+	return ans
+}
+*/
+
+// 双指针，思想是dp
+func trap(height []int) int {
+	var (
+		l              int = 0
+		r              int = len(height) - 1
+		leftMaxHeight  int = 0
+		rightMaxHeight int = 0
+		ans            int = 0
+	)
+	for l < r {
+		leftMaxHeight = max(height[l], leftMaxHeight)
+		rightMaxHeight = max(height[r], rightMaxHeight)
+		if leftMaxHeight < rightMaxHeight {
+			ans += leftMaxHeight - height[l]
+			l++
+		} else {
+			ans += rightMaxHeight - height[r]
+			r--
 		}
 	}
 	return ans
