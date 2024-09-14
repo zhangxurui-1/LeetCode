@@ -27,7 +27,7 @@ func longestConsecutive(nums []int) int {
 	return ans
 }
 
-func Test3() {
+func Test128() {
 	var m = []int{0, 3, 7, 2, 5, 8, 4, 6, 0, 1}
 	fmt.Println(longestConsecutive(m))
 }
