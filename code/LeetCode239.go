@@ -1,7 +1,12 @@
 package code
 
-import "fmt"
+import (
+	"container/heap"
+	"fmt"
+)
 
+/*
+单调队列
 type Stack struct {
 	data   []int
 	top    int
@@ -96,6 +101,58 @@ func maxSlidingWindow(nums []int, k int) []int {
 		maxIndex := stack.data[stack.bottom]
 		ans = append(ans, nums[maxIndex])
 	}
+	return ans
+}
+*/
+
+// 优先队列，大根堆
+type ElementHeap []element
+
+func (eh ElementHeap) Len() int {
+	return len(eh)
+}
+
+func (eh ElementHeap) Less(i, j int) bool {
+	return eh[i].value > eh[j].value
+}
+
+func (eh ElementHeap) Swap(i, j int) {
+	eh[i], eh[j] = eh[j], eh[i]
+}
+
+func (eh *ElementHeap) Push(x interface{}) {
+	*eh = append(*eh, x.(element))
+}
+
+func (eh *ElementHeap) Pop() interface{} {
+	if len(*eh) == 0 {
+		return nil
+	}
+	x := (*eh)[len(*eh)-1]
+	*eh = (*eh)[:len(*eh)-1]
+	return x
+}
+
+func maxSlidingWindow(nums []int, k int) []int {
+	var (
+		eh      = &ElementHeap{}
+		ans     = []int{}
+		i   int = 0
+	)
+	for ; i < k; i++ {
+		*eh = append(*eh, element{value: nums[i], loc: i})
+	}
+	heap.Init(eh)
+	ans = append(ans, (*eh)[0].value)
+
+	for ; i < len(nums); i++ {
+		heap.Push(eh, element{value: nums[i], loc: i})
+		for i-(*eh)[0].loc >= k {
+			heap.Pop(eh)
+		}
+		ans = append(ans, (*eh)[0].value)
+	}
+
 	return ans
 }
 
