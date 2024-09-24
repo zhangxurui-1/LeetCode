@@ -24,8 +24,12 @@ func minWindow(s string, t string) string {
 		}
 	}
 
-	for _, exist = mp[sByte[start]]; !exist && start < len(sByte); start++ {
+	for start < len(sByte) {
 		_, exist = mp[sByte[start]]
+		if exist {
+			break
+		}
+		start++
 	}
 
 	for i = start; i < len(sByte); i++ {
@@ -33,13 +37,24 @@ func minWindow(s string, t string) string {
 		_, exist = mp[c]
 		if exist {
 			mp[c]--
-			flag := true && mp[c] <= 0
-			if mp[c] <= 0 {
+			flag := (true && mp[c] <= 0)
+			if flag {
 				for _, v := range mp {
 					flag = flag && v <= 0
 				}
 			}
 			if flag {
+				for start <= i {
+					_, exist = mp[sByte[start]]
+					if !exist {
+						start++
+					} else if mp[sByte[start]] < 0 {
+						mp[sByte[start]]++
+						start++
+					} else {
+						break
+					}
+				}
 				ansByte := sByte[start : i+1]
 				ans = string(ansByte)
 				break
@@ -75,8 +90,8 @@ func minWindow(s string, t string) string {
 
 func Test76() {
 	var (
-		s string = "a"
-		t string = "aa"
+		s string = "abcabdebac"
+		t string = "cda"
 	)
 	fmt.Println(minWindow(s, t))
 }
